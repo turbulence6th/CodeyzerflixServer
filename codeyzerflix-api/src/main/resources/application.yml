@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev # Varsayılan profil
+  application:
+    name: codeyzerflix-api
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/codeyzerflix?authSource=admin
+      database: codeyzerflix
+      auto-index-creation: true
+
+logging:
+  level:
+    root: INFO
+    com.codeyzerflix: DEBUG
+    org.springframework.web: INFO
+

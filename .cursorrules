@@ -1,0 +1,47 @@
+CURSORRULES'DA DEĞİŞİKLİK YAPMA BANA CHATTEN SÖYLE
+BU KURALLARDANN BİRİNİ İHLAL EDERSEN BANA CHATTEN SÖYLE
+CURSORRULE'A BİRŞEY EKLEMEMİZİN İYİ OLACAĞINI DÜŞÜNÜYORSAN BANA CHATTEN SÖYLE
+YANLIŞ BİRŞEY SÖYLERSEM BENİ UYAR HEMEN ÖZÜR DİLEME
+KONTROL ÖNERDİĞİMDE DEĞİŞİKLİK YAPMADAN ÖNCE SOR
+
+Bu proje 3 maven modülünden oluşuyor.
+Entity ve Repository sınıfları codeyzerflix-common'da tutuluyor.
+Admin spesifik işler codeyzerflix-admin'de tutuluyor.
+Herkese açık işler codeyzerflix-api'de tutuluyor.
+Eğer bir config sınıfı admin ve api için de gerekliyse commona yazılır.
+
+@Value kullanma bunun yerine uygun @ConfigurationProperties anatasyonunu ile yapılandır.
+YML dosyalarında prefix'ler her zaman codeyzerflix-{MODUL_ADI} formatında olmalıdır:
+- codeyzerflix-admin
+- codeyzerflix-api
+- codeyzerflix-common
+Her modülün tüm ayarları tek bir @ConfigurationProperties sınıfında toplanmalı (örn: CommonProperties, AdminProperties, ApiProperties).
+@ConfigurationProperties'de array yerine List tercih et.
+@ConfigurationProperties'de veya yml'da bir değişiklik yaptığında diğerini de değiştir.
+common @ConfigurationProperties'da değişiklik olunca bunu admin ve api yml'larında da uygula.
+commonda yml dosyası olmayacak.
+CORS yapılandırması için @CrossOrigin anotasyonu yerine CorsConfig sınıfı kullanılmalı
+
+Controllerlarda eğer parametre alıyorsa:
+- MultipartFile içeren DTO'lar için @ModelAttribute
+- Diğer DTO'lar için @RequestBody
+anotasyonu kullanılır.
+Dönüş tipleri ya void olsun yada DTO. Map Json gibi genel tipler dönme.
+Controllerda try-catch kullanma. Gerekirse metoda throws ekle. Gelen dto'yu direk servise gönder.
+Entity'leri direk dönme, bunun yerine DTO kullan.
+Mapper olarak MapStruct kullan ve componentModel = "spring" olarak ayarla.
+
+Veri tabanı olarak MongoDb kullanılır. Dosyalar da MongoDb'de saklanır.
+
+Parent pom.xml'de tüm bağımlılıkların versiyonları <dependencyManagement> altında tanımlanmalı.
+Alt modüllerde parent'tan gelen bağımlılıkların versiyonları tekrar tanımlanmamalı.
+Alt modüllerde parent'tan gelen groupId, version ve java.version gibi ayarlar tekrar tanımlanmamalı.
+Alt modüllerde sadece artifactId, name ve description tanımlanmalı.
+Bir modülde kullanılmayan bağımlılıklar o modülün pom.xml'inde olmamalı (örn: JPA bağımlılığı MongoDB kullanıyorsak gereksiz).
+Bir modül başka bir modülün bağımlılıklarını kullanacaksa, o modülü bağımlılık olarak eklemeli ve aynı bağımlılıkları tekrar tanımlamamalı (örn: admin ve api modülleri common modülünün MongoDB bağımlılıklarını kullanıyor).
+
+Kod yazdıktan sonra derlendiğinden emin ol.
+Spring componentlerin daima @RequiredArgsConstructor ile constructor injection yap.
+Static class kullanma gerekli classları ayrı dosyalarda oluştur.
+
+CodeyzerFlix.postman_collection.json apilere ait testleri içeriyor. Controllarda değişiklik olursa bunu da güncelle.

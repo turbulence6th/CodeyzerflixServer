@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev # Varsayılan profil
+  application:
+    name: codeyzerflix-admin
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/codeyzerflix?authSource=admin
+      database: codeyzerflix
+      auto-index-creation: true
+
+logging:
+  level:
+    root: INFO
+    com.codeyzerflix: DEBUG
+    org.springframework.web: INFO
+
+codeyzerflix-admin:
+  allowed-video-types:
+    - video/mp4
+    - video/x-flv

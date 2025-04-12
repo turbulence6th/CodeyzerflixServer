@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "CodeyzerFlix API",
+		"description": "CodeyzerFlix video platformu API test koleksiyonu",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin API",
+			"description": "Admin API endpointleri",
+			"item": [
+				{
+					"name": "Video Yükleme",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Test Video",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Bu bir test videosudur",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/your/video.mp4"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/path/to/your/thumbnail.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/videos/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"videos",
+								"upload"
+							]
+						},
+						"description": "Video ve thumbnail yükleme"
+					},
+					"response": []
+				},
+				{
+					"name": "Tüm Videoları Listele",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/videos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"videos"
+							]
+						},
+						"description": "Tüm videoları listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Video Detayı",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/videos/{{videoId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"videos",
+								"{{videoId}}"
+							]
+						},
+						"description": "Belirli bir videonun detaylarını getirir"
+					},
+					"response": []
+				},
+				{
+					"name": "Video Silme",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/videos/{{videoId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"videos",
+								"{{videoId}}"
+							]
+						},
+						"description": "Belirli bir videoyu siler"
+					},
+					"response": []
+				},
+				{
+					"name": "Thumbnail Yükleme",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/path/to/your/thumbnail.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/videos/{{videoId}}/thumbnail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"videos",
+								"{{videoId}}",
+								"thumbnail"
+							]
+						},
+						"description": "Belirli bir video için thumbnail yükler"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public API",
+			"description": "Public API endpointleri",
+			"item": [
+				{
+					"name": "Tüm Videoları Listele",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/videos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"videos"
+							]
+						},
+						"description": "Tüm videoları listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Video Detayı",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/videos/{{videoId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"videos",
+								"{{videoId}}"
+							]
+						},
+						"description": "Belirli bir videonun detaylarını getirir"
+					},
+					"response": []
+				},
+				{
+					"name": "Video Arama",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/videos/search?keyword=test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"videos",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "test"
+								}
+							]
+						},
+						"description": "Anahtar kelimeye göre video arama"
+					},
+					"response": []
+				},
+				{
+					"name": "Video Akışı",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/videos/{{videoId}}/stream",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"videos",
+								"{{videoId}}",
+								"stream"
+							]
+						},
+						"description": "Video akışını başlatır"
+					},
+					"response": []
+				},
+				{
+					"name": "Thumbnail Görüntüleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/videos/{{videoId}}/thumbnail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"videos",
+								"{{videoId}}",
+								"thumbnail"
+							]
+						},
+						"description": "Video thumbnail'ını görüntüler"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "videoId",
+			"value": "your-video-id-here",
+			"type": "string"
+		}
+	]
+} 
