@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class CodeyzerPaginationResponse<T> {
 
-    private Integer totalRecord;
+    private Long totalRecord;
     private Integer totalPages;
     private List<T> data;
 }

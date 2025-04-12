@@ -26,7 +26,7 @@ public class VideoCommonService {
         Page<Video> page = getVideosPage(request);
 
         CodeyzerPaginationResponse<VideoDTO> response = new CodeyzerPaginationResponse<>();
-        response.setTotalRecord(page.getSize());
+        response.setTotalRecord(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setData(videoMapper.toDTOList(page.getContent()));
 
