@@ -6,11 +6,6 @@ spring:
     active: dev # Varsayılan profil
   application:
     name: codeyzerflix-api
-  data:
-    mongodb:
-      uri: mongodb://admin:password@localhost:27017/codeyzerflix?authSource=admin
-      database: codeyzerflix
-      auto-index-creation: true
 
 logging:
   level:

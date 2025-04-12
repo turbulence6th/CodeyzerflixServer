@@ -10,11 +10,6 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
-  data:
-    mongodb:
-      uri: mongodb://admin:password@localhost:27017/codeyzerflix?authSource=admin
-      database: codeyzerflix
-      auto-index-creation: true
 
 logging:
   level:

@@ -1,3 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:password@mongodb:27017/codeyzerflix?authSource=admin
+      database: codeyzerflix
+      auto-index-creation: true
+
 codeyzerflix-common:
   cors:
     allowed-origins:
