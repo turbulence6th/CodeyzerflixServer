@@ -43,21 +43,3 @@ mvn spring-boot:run
 cd codeyzerflix-api
 mvn spring-boot:run
 ```
-
-## API Endpoints
-
-### Admin API (http://localhost:8081/admin)
-
-- `POST /admin/videos/upload`: Video yükleme
-- `GET /admin/videos`: Tüm videoları listeleme
-- `GET /admin/videos/{id}`: Belirli bir videoyu görüntüleme
-- `DELETE /admin/videos/{id}`: Video silme
-- `POST /admin/videos/{id}/thumbnail`: Thumbnail yükleme
-
-### Public API (http://localhost:8080/api)
-
-- `GET /api/videos`: Tüm videoları listeleme
-- `GET /api/videos/{id}`: Belirli bir videoyu görüntüleme
-- `GET /api/videos/search`: Video arama
-- `GET /api/videos/{id}/stream`: Video akışı
-- `GET /api/videos/{id}/thumbnail`: Thumbnail görüntüleme 
