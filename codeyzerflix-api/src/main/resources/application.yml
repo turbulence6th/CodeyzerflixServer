@@ -12,4 +12,3 @@ logging:
     root: INFO
     com.codeyzerflix: DEBUG
     org.springframework.web: INFO
-

@@ -5,6 +5,10 @@ spring:
       database: codeyzerflix
       auto-index-creation: true
 
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+
 codeyzerflix-common:
   cors:
     allowed-origins:

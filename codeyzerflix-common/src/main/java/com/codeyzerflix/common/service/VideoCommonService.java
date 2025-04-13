@@ -9,11 +9,14 @@ import com.codeyzerflix.common.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +46,9 @@ public class VideoCommonService {
             }
 
             if (videoFilterDTO.getKeyword() != null && !videoFilterDTO.getKeyword().trim().isEmpty()) {
-                query.addCriteria(Criteria.where("title").regex(videoFilterDTO.getKeyword(), "i"));
+                TextCriteria textCriteria = TextCriteria.forLanguage("turkish").matching(videoFilterDTO.getKeyword());
+                query.addCriteria(textCriteria);
+                query.with(Sort.by(Sort.Order.desc("score")));
             }
         }
 
@@ -51,7 +56,6 @@ public class VideoCommonService {
 
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
         query.with(pageable);
-        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 
         List<Video> videos = mongoTemplate.find(query, Video.class);
 
