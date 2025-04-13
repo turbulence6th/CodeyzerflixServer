@@ -93,8 +93,20 @@ public class GridFsService {
 
     public List<ObjectId> findUnusedGridFSFileIds() {
         Aggregation aggregation = Aggregation.newAggregation(
+                // matchedVideos array'i oluştur
                 Aggregation.lookup("videos", "_id", "file_id", "matchedVideos"),
-                Aggregation.match(Criteria.where("matchedVideos").size(0)),
+
+                // Şu anki zamandan 30 dakika çıkaran bir alan oluştur
+                Aggregation.addFields()
+                        .addFieldWithValue("thirtyMinutesAgo",
+                                Document.parse("{ $dateSubtract: { startDate: '$$NOW', unit: 'minute', amount: 30 } }"))
+                        .build(),
+
+                // matchedVideos boş ve uploadDate < thirtyMinutesAgo olanları filtrele
+                Aggregation.match(Criteria.where("matchedVideos").size(0)
+                        .andOperator(Criteria.where("uploadDate").lt("$thirtyMinutesAgo"))),
+
+                // Sadece _id'leri projekte et
                 Aggregation.project("_id")
         );
 
