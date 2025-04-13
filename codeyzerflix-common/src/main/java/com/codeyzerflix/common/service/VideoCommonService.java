@@ -9,10 +9,7 @@ import com.codeyzerflix.common.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Collation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,14 +38,16 @@ public class VideoCommonService {
 
         VideoFilterDTO videoFilterDTO = request.getDetails();
         if (videoFilterDTO != null) {
-            if (videoFilterDTO.getVideoType() != null && !videoFilterDTO.getVideoType().trim().isEmpty()) {
-                query.addCriteria(Criteria.where("videoType").is(videoFilterDTO.getVideoType()));
-            }
-
             if (videoFilterDTO.getKeyword() != null && !videoFilterDTO.getKeyword().trim().isEmpty()) {
                 TextCriteria textCriteria = TextCriteria.forLanguage("turkish").matching(videoFilterDTO.getKeyword());
                 query.addCriteria(textCriteria);
-                query.with(Sort.by(Sort.Order.desc("score")));
+
+                query = TextQuery.queryText(textCriteria)
+                        .sortByScore();
+            }
+
+            if (videoFilterDTO.getVideoType() != null && !videoFilterDTO.getVideoType().trim().isEmpty()) {
+                query.addCriteria(Criteria.where("videoType").is(videoFilterDTO.getVideoType()));
             }
         }
 
