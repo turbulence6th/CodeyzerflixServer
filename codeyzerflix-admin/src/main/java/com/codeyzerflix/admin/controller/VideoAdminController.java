@@ -1,6 +1,7 @@
 package com.codeyzerflix.admin.controller;
 
 import com.codeyzerflix.admin.dto.VideoSaveRequest;
+import com.codeyzerflix.admin.dto.VideoUpdateRequest;
 import com.codeyzerflix.admin.service.VideoAdminService;
 import com.codeyzerflix.common.dto.CodeyzerPaginationRequest;
 import com.codeyzerflix.common.dto.CodeyzerPaginationResponse;
@@ -36,6 +37,12 @@ public class VideoAdminController {
     @PostMapping("/save")
     public ResponseEntity<VideoDTO> saveVideo(@RequestBody VideoSaveRequest request) throws IOException {
         VideoDTO video = videoAdminService.saveVideo(request);
+        return ResponseEntity.ok(video);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<VideoDTO> updateVideo(@PathVariable String id, @RequestBody VideoUpdateRequest request) throws IOException {
+        VideoDTO video = videoAdminService.updateVideo(id, request);
         return ResponseEntity.ok(video);
     }
 

@@ -16,8 +16,9 @@ logging:
     root: INFO
     com.codeyzerflix: DEBUG
     org.springframework.web: INFO
-
+    org.springframework.data.mongodb: DEBUG
 codeyzerflix-admin:
   allowed-video-types:
     - video/mp4
     - video/x-flv
+    - video/x-divx

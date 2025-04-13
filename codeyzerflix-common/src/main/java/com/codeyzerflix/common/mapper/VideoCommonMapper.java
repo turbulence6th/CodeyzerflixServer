@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface VideoMapper {
+public interface VideoCommonMapper {
 
     VideoDTO toDTO(Video video);
     List<VideoDTO> toDTOList(List<Video> videoList);

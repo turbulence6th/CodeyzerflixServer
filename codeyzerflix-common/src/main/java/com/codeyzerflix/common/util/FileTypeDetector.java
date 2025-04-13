@@ -6,21 +6,26 @@ import java.io.InputStream;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileTypeDetector {
-    
+
     private static final byte[] MP4_MAGIC = {(byte)0x66, (byte)0x74, (byte)0x79, (byte)0x70}; // ftyp
     private static final byte[] WEBM_MAGIC = {(byte)0x1A, (byte)0x45, (byte)0xDF, (byte)0xA3}; // WEBM
     private static final byte[] QUICKTIME_MAGIC = {(byte)0x66, (byte)0x74, (byte)0x79, (byte)0x70, (byte)0x71, (byte)0x74}; // ftypqt
     private static final byte[] MOV_MAGIC = {(byte)0x6D, (byte)0x6F, (byte)0x6F, (byte)0x76}; // moov
     private static final byte[] MOV_MAGIC2 = {(byte)0x6D, (byte)0x64, (byte)0x61, (byte)0x74}; // mdat
     private static final byte[] FLV_MAGIC = {(byte)0x46, (byte)0x4C, (byte)0x56, (byte)0x01}; // FLV
-    
+    private static final byte[] AVI_MAGIC = {(byte)0x52, (byte)0x49, (byte)0x46, (byte)0x46}; // RIFF
+    private static final byte[] AVI_IDENTIFIER = {(byte)0x41, (byte)0x56, (byte)0x49, (byte)0x20}; // AVI
+    private static final byte[] DIVX_FOURCC = {(byte)0x44, (byte)0x49, (byte)0x56, (byte)0x58}; // DIVX
+    private static final byte[] DX50_FOURCC = {(byte)0x44, (byte)0x58, (byte)0x35, (byte)0x30}; // DX50
+    private static final byte[] XVID_FOURCC = {(byte)0x58, (byte)0x56, (byte)0x49, (byte)0x44}; // XVID
+
     private static final byte[] JPEG_MAGIC = {(byte)0xFF, (byte)0xD8, (byte)0xFF};
     private static final byte[] PNG_MAGIC = {(byte)0x89, (byte)0x50, (byte)0x4E, (byte)0x47};
     private static final byte[] GIF_MAGIC = {(byte)0x47, (byte)0x49, (byte)0x46, (byte)0x38}; // GIF8
-    
+
     public static String detectVideoType(MultipartFile file) throws IOException {
-        byte[] buffer = readFileHeader(file, 1024); // İlk 1KB'ı oku
-        
+        byte[] buffer = readFileHeader(file, 2048); // İlk 2KB'ı oku
+
         if (findMagicBytes(buffer, MP4_MAGIC) != -1) {
             return "video/mp4";
         } else if (findMagicBytes(buffer, WEBM_MAGIC) != -1) {
@@ -28,11 +33,18 @@ public class FileTypeDetector {
         } else if (findMagicBytes(buffer, QUICKTIME_MAGIC) != -1) {
             return "video/quicktime";
         } else if (findMagicBytes(buffer, MOV_MAGIC) != -1 || findMagicBytes(buffer, MOV_MAGIC2) != -1) {
-            return "video/quicktime"; // MOV formatı quicktime olarak döner
+            return "video/quicktime";
         } else if (findMagicBytes(buffer, FLV_MAGIC) != -1) {
             return "video/x-flv";
+        } else if (findMagicBytes(buffer, AVI_MAGIC) != -1 && findMagicBytes(buffer, AVI_IDENTIFIER) != -1) {
+            // AVI bulundu, şimdi codec kontrol et
+            if (findMagicBytes(buffer, DIVX_FOURCC) != -1 || findMagicBytes(buffer, DX50_FOURCC) != -1 || findMagicBytes(buffer, XVID_FOURCC) != -1) {
+                return "video/x-divx";
+            } else {
+                return "video/x-msvideo"; // Genel AVI
+            }
         }
-        
+
         throw new IllegalArgumentException("Desteklenmeyen video formatı");
     }
     
@@ -65,6 +77,10 @@ public class FileTypeDetector {
                 return ".mov";
             case "video/x-flv":
                 return ".flv";
+            case "video/x-divx":
+                return ".avi"; // DivX de .avi uzantısı kullanır
+            case "video/x-msvideo":
+                return ".avi"; // Genel AVI dosyaları
             case "image/jpeg":
                 return ".jpg";
             case "image/png":

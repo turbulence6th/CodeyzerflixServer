@@ -1,5 +1,6 @@
 package com.codeyzerflix.common.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,7 +21,7 @@ public class Video {
     private String title;
     
     @Field("file_id")
-    private String fileId;
+    private ObjectId fileId;
     
     @Field("file_name")
     private String fileName;

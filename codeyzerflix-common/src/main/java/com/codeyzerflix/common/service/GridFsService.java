@@ -2,7 +2,14 @@ package com.codeyzerflix.common.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -19,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GridFsService {
 
     private final GridFsTemplate gridFsTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public String saveFile(InputStream inputStream, String filename, String contentType) throws IOException {
         return gridFsTemplate.store(
@@ -28,12 +36,12 @@ public class GridFsService {
         ).toString();
     }
 
-    public InputStream getFile(String fileId) throws IOException {
+    public InputStream getFile(ObjectId fileId) throws IOException {
         GridFSFile file = getGridFSFile(fileId);
         return gridFsTemplate.getResource(file).getInputStream();
     }
 
-    public InputStream getFileRange(String fileId, long start, long end) throws IOException {
+    public InputStream getFileRange(ObjectId fileId, long start, long end) throws IOException {
         GridFSFile file = getGridFSFile(fileId);
         InputStream inputStream = gridFsTemplate.getResource(file).getInputStream();
         
@@ -56,20 +64,20 @@ public class GridFsService {
         return inputStream;
     }
 
-    public long getFileLength(String fileId) throws IOException {
+    public long getFileLength(ObjectId fileId) throws IOException {
         GridFSFile file = getGridFSFile(fileId);
         return file.getLength();
     }
 
-    public void deleteFile(String fileId) {
+    public void deleteFile(ObjectId fileId) {
         gridFsTemplate.delete(
-            org.springframework.data.mongodb.core.query.Query.query(
-                org.springframework.data.mongodb.core.query.Criteria.where("_id").is(fileId)
+            Query.query(
+                Criteria.where("_id").is(fileId)
             )
         );
     }
     
-    public GridFSFile getGridFSFile(String fileId) throws IOException {
+    public GridFSFile getGridFSFile(ObjectId fileId) throws IOException {
         GridFSFile file = gridFsTemplate.findOne(
             Query.query(
                 Criteria.where("_id").is(fileId)
@@ -81,5 +89,29 @@ public class GridFsService {
         }
 
         return file;
+    }
+
+    public List<ObjectId> findUnusedGridFSFileIds() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.lookup("videos", "_id", "file_id", "matchedVideos"),
+                Aggregation.match(Criteria.where("matchedVideos").size(0)),
+                Aggregation.project("_id")
+        );
+
+        AggregationResults<Document> results =
+                mongoTemplate.aggregate(aggregation, "fs.files", Document.class);
+
+        return results.getMappedResults().stream()
+                .map(doc -> doc.getObjectId("_id"))
+                .collect(Collectors.toList());
+    }
+
+    public void deleteUnusedGridFsFiles() {
+        List<ObjectId> unusedFileIds = findUnusedGridFSFileIds();
+
+        for (ObjectId fileId : unusedFileIds) {
+            deleteFile(fileId);
+            System.out.println("Deleted unused file: " + fileId);
+        }
     }
 } 

@@ -4,7 +4,7 @@ import com.codeyzerflix.common.dto.CodeyzerPaginationRequest;
 import com.codeyzerflix.common.dto.CodeyzerPaginationResponse;
 import com.codeyzerflix.common.dto.VideoDTO;
 import com.codeyzerflix.common.dto.VideoFilterDTO;
-import com.codeyzerflix.common.mapper.VideoMapper;
+import com.codeyzerflix.common.mapper.VideoCommonMapper;
 import com.codeyzerflix.common.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VideoCommonService {
 
-    private final VideoMapper videoMapper;
+    private final VideoCommonMapper videoCommonMapper;
     private final MongoTemplate mongoTemplate;
 
     public CodeyzerPaginationResponse<VideoDTO> getAllVideos(CodeyzerPaginationRequest<VideoFilterDTO> request) {
@@ -28,7 +28,7 @@ public class VideoCommonService {
         CodeyzerPaginationResponse<VideoDTO> response = new CodeyzerPaginationResponse<>();
         response.setTotalRecord(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
-        response.setData(videoMapper.toDTOList(page.getContent()));
+        response.setData(videoCommonMapper.toDTOList(page.getContent()));
 
         return response;
     }
