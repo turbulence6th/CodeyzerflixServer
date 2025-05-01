@@ -8,7 +8,7 @@ spring:
 codeyzerflix-common:
   cors:
     allowed-origins:
-      - https://codeyzerflix.tail9fb8f4.ts.net
+      - https://flix.codeyzer.com
     allowed-methods:
       - GET
       - POST
